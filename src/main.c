@@ -1,13 +1,13 @@
 #include <SDL2/SDL.h>
 #include <stdbool.h>
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     SDL_Init(SDL_INIT_VIDEO);
 
-    SDL_Window *window = SDL_CreateWindow("Super Mario Bros. 1 Clone", 0, 0, 640, 480, 0);
+    SDL_Window* window = SDL_CreateWindow("Super Mario Bros. 1 Clone", 50, 50, 640, 480, 0);
 
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     bool running = true;
     SDL_Event event;
@@ -24,6 +24,10 @@ int main(int argc, char *argv[])
 
         SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
         SDL_RenderClear(renderer);
+
+        SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+        SDL_Rect rect = {.x = 50, .y = 50, .w = 100, .h = 100};
+        SDL_RenderFillRect(renderer, &rect);
 
         SDL_RenderPresent(renderer);
     }
