@@ -1,10 +1,24 @@
 SRC = src
 BUILD = build
 OBJS = objs
+
+SDL_CFLAGS = $(shell pkg-config --cflags sdl2)
 SDL_LIBS = $(shell pkg-config --libs sdl2)
 
-app.exe: $(OBJS)/main.o
-	gcc $(OBJS)/main.o -o $(BUILD)/app.exe $(SDL_LIBS)
+ifeq ($(OS),Windows_NT)
+    EXE = .exe
+else
+    EXE =
+endif
+
+.PHONY: clean
+
+$(BUILD)/app$(EXE): $(OBJS)/main.o
+	gcc $(OBJS)/main.o -o $(BUILD)/app$(EXE) $(SDL_LIBS)
 
 $(OBJS)/main.o: $(SRC)/main.c
-	gcc -c $(SRC)/main.c -o $(OBJS)/main.o
+	gcc $(SDL_CFLAGS) -c $(SRC)/main.c -o $(OBJS)/main.o
+
+clean:
+	rm -f $(OBJS)/*.o
+	rm -f $(BUILD)/app$(EXE)
