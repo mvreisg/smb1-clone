@@ -1,9 +1,8 @@
 SRC = src
 BUILD = build
 OBJS = objs
-
-SDL_CFLAGS = $(shell pkg-config --cflags sdl2)
-SDL_LIBS = $(filter-out -mwindows,$(shell pkg-config --libs sdl2))
+SDL_CFLAGS = $(shell pkg-config --cflags sdl2 SDL2_image)
+SDL_LIBS = $(filter-out -mwindows,$(shell pkg-config --libs sdl2 SDL2_image))
 
 ifeq ($(OS),Windows_NT)
     EXE = .exe

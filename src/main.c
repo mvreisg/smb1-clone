@@ -1,10 +1,37 @@
 #define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <stdbool.h>
+
+typedef struct
+{
+    float x;
+    float y;
+} Position;
+
+typedef struct
+{
+    float width;
+    float height;
+} Dimension;
+
+typedef struct
+{
+    Position position;
+    Dimension dimension;
+} Rectangle;
+
+typedef struct
+{
+    Rectangle rectangle;
+    SDL_Texture* texture;
+} Sprite;
 
 int main(int argc, char* argv[])
 {
     SDL_Init(SDL_INIT_VIDEO);
+
+    IMG_Init(IMG_INIT_PNG);
 
     SDL_Window* window = SDL_CreateWindow(
         "Super Mario Bros. 1 Clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, 0);
@@ -15,8 +42,17 @@ int main(int argc, char* argv[])
     SDL_Event event;
     float TARGET_FPS = 60.0f;
     float FRAME_DELAY = 1000.0f / TARGET_FPS;
-    int x = 0;
-    int y = 0;
+
+    SDL_Surface* surface = IMG_Load("assets/sprites/playable_characters.png");
+
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+    SDL_FreeSurface(surface);
+
+    Sprite* sprite = malloc(sizeof(Sprite));
+    sprite->texture = texture;
+    sprite->rectangle.dimension.width = 100;
+    sprite->rectangle.dimension.height = 100;
 
     while (running)
     {
@@ -44,27 +80,29 @@ int main(int argc, char* argv[])
 
         if (wPressed && aPressed == false && sPressed == false && dPressed == false)
         {
-            y--;
+            sprite->rectangle.position.y -= 1;
         }
         else if (aPressed && wPressed == false && sPressed == false && dPressed == false)
         {
-            x--;
+            sprite->rectangle.position.x -= 1;
         }
         else if (sPressed && wPressed == false && aPressed == false && dPressed == false)
         {
-            y++;
+            sprite->rectangle.position.y += 1;
         }
         else if (dPressed && wPressed == false && aPressed == false && sPressed == false)
         {
-            x++;
+            sprite->rectangle.position.x += 1;
         }
 
         SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
         SDL_RenderClear(renderer);
 
-        SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
-        SDL_Rect rect = {.x = x, .y = y, .w = 100, .h = 100};
-        SDL_RenderFillRect(renderer, &rect);
+        SDL_Rect rect = {.x = sprite->rectangle.position.x,
+                         .y = sprite->rectangle.position.y,
+                         .w = sprite->rectangle.dimension.width,
+                         .h = sprite->rectangle.dimension.height};
+        SDL_RenderCopy(renderer, sprite->texture, NULL, &rect);
 
         SDL_RenderPresent(renderer);
 
