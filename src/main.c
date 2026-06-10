@@ -23,6 +23,7 @@ typedef struct
 
 typedef struct
 {
+    int scale;
     Rectangle rectangle;
     SDL_Texture* texture;
 } Sprite;
@@ -49,10 +50,11 @@ int main(int argc, char* argv[])
 
     SDL_FreeSurface(surface);
 
-    Sprite* sprite = malloc(sizeof(Sprite));
+    Sprite* sprite = (Sprite*)malloc(sizeof(Sprite));
+    sprite->scale = 4;
     sprite->texture = texture;
-    sprite->rectangle.dimension.width = 100;
-    sprite->rectangle.dimension.height = 100;
+    sprite->rectangle.dimension.width = 16 * sprite->scale;
+    sprite->rectangle.dimension.height = 32 * sprite->scale;
 
     while (running)
     {
@@ -95,19 +97,24 @@ int main(int argc, char* argv[])
             sprite->rectangle.position.x += 1;
         }
 
-        SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         SDL_RenderClear(renderer);
+
+        SDL_Rect cropRect = {.x = 0, .y = 0, .w = 16, .h = 32};
 
         SDL_Rect rect = {.x = sprite->rectangle.position.x,
                          .y = sprite->rectangle.position.y,
                          .w = sprite->rectangle.dimension.width,
                          .h = sprite->rectangle.dimension.height};
-        SDL_RenderCopy(renderer, sprite->texture, NULL, &rect);
+        SDL_RenderCopy(renderer, sprite->texture, &cropRect, &rect);
 
         SDL_RenderPresent(renderer);
 
         SDL_Delay(FRAME_DELAY);
     }
+
+    free(sprite);
+    sprite = NULL;
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
