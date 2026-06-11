@@ -1,6 +1,6 @@
 SRC = src
 BUILD = build
-OBJS = objs
+BIN = bin
 SDL_CFLAGS = $(shell pkg-config --cflags sdl2 SDL2_image)
 SDL_LIBS = $(filter-out -mwindows,$(shell pkg-config --libs sdl2 SDL2_image))
 
@@ -12,11 +12,11 @@ endif
 
 .PHONY: clean
 
-$(BUILD)/app$(EXE): $(OBJS)/main.o
-	gcc $(OBJS)/main.o -o $(BUILD)/app$(EXE) $(SDL_LIBS)
+$(BIN)/app$(EXE): $(BUILD)/main.o
+	gcc $(BUILD)/main.o -o $(BIN)/app$(EXE) $(SDL_LIBS)
 
 $(OBJS)/main.o: $(SRC)/main.c
-	gcc $(SDL_CFLAGS) -c $(SRC)/main.c -o $(OBJS)/main.o
+	gcc $(SDL_CFLAGS) -c $(SRC)/main.c -o $(BUILD)/main.o
 
 clean:
 	rm -f $(OBJS)/*.o

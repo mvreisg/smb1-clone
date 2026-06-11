@@ -1,32 +1,6 @@
-#define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <stdbool.h>
-
-typedef struct
-{
-    float x;
-    float y;
-} Position;
-
-typedef struct
-{
-    float width;
-    float height;
-} Dimension;
-
-typedef struct
-{
-    Position position;
-    Dimension dimension;
-} Rectangle;
-
-typedef struct
-{
-    int scale;
-    Rectangle rectangle;
-    SDL_Texture* texture;
-} Sprite;
 
 int main(int argc, char* argv[])
 {
