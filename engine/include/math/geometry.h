@@ -2,34 +2,34 @@ typedef struct
 {
     float x;
     float y;
-} FloatPoint;
+} Boot_FloatPoint;
 
 typedef struct
 {
     float width;
     float height;
-} FloatDimension;
+} Boot_FloatDimension;
 
 typedef struct
 {
-    FloatPoint point;
-    FloatDimension dimension;
-} FloatRectangle;
+    Boot_FloatPoint point;
+    Boot_FloatDimension dimension;
+} Boot_FloatRectangle;
 
 typedef struct
 {
     int x;
     int y;
-} IntPoint;
+} Boot_IntPoint;
 
 typedef struct
 {
     int width;
     int height;
-} IntDimension;
+} Boot_IntDimension;
 
 typedef struct
 {
-    IntPoint point;
-    IntDimension dimension;
-} IntRectangle;
+    Boot_IntPoint point;
+    Boot_IntDimension dimension;
+} Boot_IntRectangle;

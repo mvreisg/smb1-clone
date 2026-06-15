@@ -4,6 +4,11 @@
 typedef enum
 {
     IMAGE_INITIALIZE_PNG = 1
-} ImageInitalizationFlags;
+} Boot_Image_InitializationFlags;
 
-ImageInitalizationFlags Boot_Rendering_Initialize(ImageInitalizationFlags flags);
+typedef struct
+{
+    SDL_Surface* surface;
+} Boot_Image;
+
+Boot_Image_InitializationFlags Boot_Image_Initialize(Boot_Image_InitializationFlags flags);

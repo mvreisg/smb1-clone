@@ -1,8 +1,9 @@
 #include "window.h"
 
-WindowContext* Boot_Window_CreateWindow(char* title, IntRectangle rectangle, WindowFlags flags)
+Boot_Window*
+Boot_Window_CreateWindow(char* title, Boot_IntRectangle rectangle, Boot_WindowFlags flags)
 {
-    WindowContext* context = (WindowContext*)malloc(sizeof(WindowContext));
+    Boot_Window* context = (Boot_Window*)malloc(sizeof(Boot_Window));
 
     context->flags = flags;
     context->rectangle = rectangle;

@@ -15,14 +15,15 @@ typedef enum
     WINDOW_MAXIMIZED = 512,
     WINDOW_INPUT_GRABBED = 1024,
     WINDOW_ALLOW_HIGHDPI = 2048,
-} WindowFlags;
+} Boot_WindowFlags;
 
 typedef struct
 {
     SDL_Window* window;
-    WindowFlags flags;
-    IntRectangle rectangle;
+    Boot_WindowFlags flags;
+    Boot_IntRectangle rectangle;
     char* title;
-} WindowContext;
+} Boot_Window;
 
-WindowContext* Boot_Window_CreateWindow(char* title, IntRectangle rectangle, WindowFlags flags);
+Boot_Window*
+Boot_Window_CreateWindow(char* title, Boot_IntRectangle rectangle, Boot_WindowFlags flags);
