@@ -4,14 +4,6 @@
 
 int main(int argc, char* argv[])
 {
-    SDL_Init(SDL_INIT_VIDEO);
-
-    IMG_Init(IMG_INIT_PNG);
-
-    SDL_Window* window = SDL_CreateWindow(
-        "Super Mario Bros. 1 Clone", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, 0);
-
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
     bool running = true;
     SDL_Event event;
