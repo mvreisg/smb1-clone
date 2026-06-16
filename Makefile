@@ -1,23 +1,19 @@
-SRC = src
-BUILD = build
-BIN = bin
-SDL_CFLAGS = $(shell pkg-config --cflags sdl2 SDL2_image)
-SDL_LIBS = $(filter-out -mwindows,$(shell pkg-config --libs sdl2 SDL2_image))
+ENGINE_DIR = engine/skw
+GAME_DIR = game/smb1-clone
 
-ifeq ($(OS),Windows_NT)
-    EXE = .exe
-else
-    EXE =
-endif
+.PHONY: all engine game clean rebuild
 
-.PHONY: clean
+all: engine game
 
-$(BIN)/app$(EXE): $(BUILD)/main.o
-	gcc $(BUILD)/main.o -o $(BIN)/app$(EXE) $(SDL_LIBS)
+engine:
+	$(MAKE) -C $(ENGINE_DIR)
 
-$(OBJS)/main.o: $(SRC)/main.c
-	gcc $(SDL_CFLAGS) -c $(SRC)/main.c -o $(BUILD)/main.o
+game:
+	$(MAKE) -C $(GAME_DIR)
 
 clean:
-	rm -f $(OBJS)/*.o
-	rm -f $(BUILD)/app$(EXE)
+	$(MAKE) -C $(ENGINE_DIR) clean
+	$(MAKE) -C $(GAME_DIR) clean
+	rm -rf bin
+
+rebuild: clean all
