@@ -19,8 +19,8 @@ int SMBOneClone_Core_Run()
 
     SKW_IntRectangle window_rectangle = {.point = {.x = 0, .y = 0},
                                          .dimension = {.width = 1280, .height = 720}};
-    SKW_Window* window = SKW_Window_CreateWindow("smb1-clone", window_rectangle, SKW_WINDOW_VULKAN);
-    SKW_Renderer* renderer = SKW_Renderer_CreateRenderer(window, SKW_INITIALIZE_VIDEO);
+    SKW_Window* window = SKW_Window_CreateWindow("smb1-clone", window_rectangle, 0);
+    SKW_Renderer* renderer = SKW_Renderer_CreateRenderer(window, SKW_RENDERER_ACCELERATED);
 
     while (running)
     {

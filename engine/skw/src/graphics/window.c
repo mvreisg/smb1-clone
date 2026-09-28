@@ -9,9 +9,9 @@ SKW_Window* SKW_Window_CreateWindow(char* title, SKW_IntRectangle rectangle, SKW
     context->title = title;
 
     Uint32 sdl_flags = 0;
-    if ((flags & SKW_WINDOW_VULKAN) == SKW_WINDOW_VULKAN)
+    if ((flags & SKW_WINDOW_OPENGL) == SKW_WINDOW_OPENGL)
     {
-        sdl_flags |= SDL_VIDEO_VULKAN;
+        sdl_flags |= SDL_VIDEO_OPENGL;
     }
 
     context->window = SDL_CreateWindow(title,

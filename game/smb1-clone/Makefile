@@ -17,7 +17,8 @@ CFLAGS = \
 	-std=c11 \
 	-I$(ENGINE_INC) \
 	-Isrc \
-	-I/C:/msys64/ucrt64/include/SDL2
+	-I../.. \
+	-I/C:/Users/marcus.vrgoncalves/msys64/ucrt64/include/SDL2
 
 # SDL sem SDL2main e sem mingw32
 SDL_LIBS = -lSDL2 -lSDL2_image
@@ -31,8 +32,13 @@ LDFLAGS = \
 	-Wl,-subsystem,console \
 	-Wl,-e,mainCRTStartup
 
-SRC := $(shell find $(SRC_DIR) -name '*.c')
-OBJ := $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRC))
+GAME_SRC := $(shell find $(SRC_DIR) -name '*.c')
+APP_SRC := $(shell find ../../src -name '*.c')
+
+GAME_OBJ := $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(GAME_SRC))
+APP_OBJ := $(patsubst ../../src/%.c,$(BUILD_DIR)/app/%.o,$(APP_SRC))
+
+OBJ := $(GAME_OBJ) $(APP_OBJ)
 
 all: $(TARGET)
 
@@ -41,6 +47,10 @@ $(TARGET): $(OBJ)
 	$(CC) $^ -o $@ $(LDFLAGS)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BUILD_DIR)/app/%.o: ../../src/%.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 

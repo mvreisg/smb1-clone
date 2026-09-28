@@ -22,6 +22,11 @@ int SKW_Core_PollEvent(SKW_Core_Events* event, SKW_Core_KeyEvent_KeyCode* key_co
     SDL_Event sdl_event;
     int poll = SDL_PollEvent(&sdl_event);
 
+    if (poll == 0)
+    {
+        return 0;
+    }    
+
     if (sdl_event.type == SDL_QUIT)
     {
         *event = SKW_QUIT;
@@ -36,7 +41,7 @@ int SKW_Core_PollEvent(SKW_Core_Events* event, SKW_Core_KeyEvent_KeyCode* key_co
         }
     }
 
-    return poll;
+    return 1;
 }
 
 void SKW_Core_Delay(Uint32 milliseconds)
