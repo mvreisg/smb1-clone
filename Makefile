@@ -1,5 +1,5 @@
-ENGINE_DIR = engine/skw
-GAME_DIR = game/smb1-clone
+ENGINE_DIR = engine
+GAME_DIR = game
 
 .PHONY: all engine game clean rebuild
 

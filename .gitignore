@@ -1,3 +1,6 @@
 .vscode
+/objs/
 /build/
 /bin/
+/engine/build/
+/game/build/

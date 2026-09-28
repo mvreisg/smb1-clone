@@ -1,4 +1,4 @@
-#include <game/smb1-clone/include/core/core.h>
+#include <game/include/core/core.h>
 
 int main(int argc, char* argv[])
 {
