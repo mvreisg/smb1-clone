@@ -2,5 +2,5 @@
 
 int main(int argc, char* argv[])
 {
-    return SMBOneClone_Core_Run();
+    return Game_Core_Run();
 }

@@ -5,4 +5,4 @@
 typedef struct
 {
     SDL_Texture* texture;
-} SKW_Texture;
+} Engine_Texture;

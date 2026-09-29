@@ -2,16 +2,16 @@
 #include "graphics/image.h"
 #include "graphics/renderer.h"
 
-SKW_Texture* SKW_Texture_CreateTexture(SKW_Renderer* renderer_context, SKW_Image* image)
+Engine_Texture* Engine_Texture_CreateTexture(Engine_Renderer* renderer_context, Engine_Image* image)
 {
-    SKW_Texture* texture = (SKW_Texture*)malloc(sizeof(SKW_Texture));
+    Engine_Texture* texture = (Engine_Texture*)malloc(sizeof(Engine_Texture));
 
     texture->texture = SDL_CreateTextureFromSurface(renderer_context->renderer, image->surface);
 
     return texture;
 }
 
-void SKW_Texture_FreeTexture(SKW_Texture* texture)
+void Engine_Texture_FreeTexture(Engine_Texture* texture)
 {
     SDL_DestroyTexture(texture->texture);
     free(texture);

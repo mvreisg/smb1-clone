@@ -1,3 +1,3 @@
 #pragma once
 
-int SMBOneClone_Core_Run();
+int Game_Core_Run();

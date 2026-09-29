@@ -3,39 +3,41 @@
 #include "graphics/window.h"
 #include <stdbool.h>
 
-int SMBOneClone_Core_Run()
+int Game_Core_Run()
 {
     bool running = true;
 
     float TARGET_FPS = 60.0f;
     float FRAME_DELAY = 1000.0f / TARGET_FPS;
 
-    SKW_Core_InitializationStatus initialization_status = SKW_Core_Initialize(SKW_INITIALIZE_VIDEO);
-    if ((initialization_status & SKW_ERROR) == SKW_ERROR)
+    Engine_Core_InitializationStatus initialization_status =
+        Engine_Core_Initialize(ENGINE_INITIALIZE_VIDEO);
+    if ((initialization_status & ENGINE_ERROR) == ENGINE_ERROR)
     {
-        SKW_Core_Quit();
+        Engine_Core_Quit();
         return 1;
     }
 
-    SKW_IntRectangle window_rectangle = {.point = {.x = 0, .y = 0},
-                                         .dimension = {.width = 1280, .height = 720}};
-    SKW_Window* window = SKW_Window_CreateWindow("smb1-clone", window_rectangle, 0);
-    SKW_Renderer* renderer = SKW_Renderer_CreateRenderer(window, SKW_RENDERER_ACCELERATED);
+    Engine_IntRectangle window_rectangle = {.point = {.x = 0, .y = 0},
+                                            .dimension = {.width = 1280, .height = 720}};
+    Engine_Window* window =
+        Engine_Window_CreateWindow("smb1-clone", window_rectangle, ENGINE_WINDOW_VULKAN);
+    Engine_Renderer* renderer = Engine_Renderer_CreateRenderer(window, ENGINE_RENDERER_ACCELERATED);
 
     while (running)
     {
-        SKW_Core_Events events;
-        SKW_Core_KeyEvent_KeyCode key_code;
-        while (SKW_Core_PollEvent(&events, &key_code))
+        Engine_Core_Events events;
+        Engine_Core_KeyEvent_KeyCode key_code;
+        while (Engine_Core_PollEvent(&events, &key_code))
         {
-            if ((events & SKW_QUIT) == SKW_QUIT)
+            if ((events & ENGINE_QUIT) == ENGINE_QUIT)
             {
                 running = false;
                 break;
             }
-            if ((events & SKW_KEY_DOWN) == SKW_KEY_DOWN)
+            if ((events & ENGINE_KEY_DOWN) == ENGINE_KEY_DOWN)
             {
-                if (key_code == SKW_ESCAPE)
+                if (key_code == ENGINE_ESCAPE)
                 {
                     running = false;
                     break;
@@ -48,16 +50,16 @@ int SMBOneClone_Core_Run()
             break;
         }
 
-        SKW_Renderer_RenderClear(renderer);
-        SKW_Renderer_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-        SKW_Renderer_RenderPresent(renderer);
+        Engine_Renderer_RenderClear(renderer);
+        Engine_Renderer_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        Engine_Renderer_RenderPresent(renderer);
 
-        SKW_Core_Delay(FRAME_DELAY);
+        Engine_Core_Delay(FRAME_DELAY);
     }
 
-    SKW_Renderer_FreeRenderer(renderer);
-    SKW_Window_FreeWindow(window);
-    SKW_Core_Quit();
+    Engine_Renderer_FreeRenderer(renderer);
+    Engine_Window_FreeWindow(window);
+    Engine_Core_Quit();
 
     return 0;
 }

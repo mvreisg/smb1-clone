@@ -5,22 +5,22 @@
 
 typedef enum
 {
-    SKW_KEYBOARD_W = 0,
-    SKW_KEYBOARD_S = 1,
-    SKW_KEYBOARD_A = 2,
-    SKW_KEYBOARD_D = 3,
-} SKW_Keyboard_Keys;
+    ENGINE_KEYBOARD_W = 0,
+    ENGINE_KEYBOARD_S = 1,
+    ENGINE_KEYBOARD_A = 2,
+    ENGINE_KEYBOARD_D = 3,
+} Engine_Keyboard_Keys;
 
 typedef struct
 {
     bool is_pressed;
-} SKW_Keyboard_Key;
+} Engine_Keyboard_Key;
 
 typedef struct
 {
-    SKW_Keyboard_Key* keys;
-} SKW_Keyboard;
+    Engine_Keyboard_Key* keys;
+} Engine_Keyboard;
 
-SKW_Keyboard* SKW_Keyboard_Create();
+Engine_Keyboard* Engine_Keyboard_Create();
 
-void SKW_Keyboard_Update(SKW_Keyboard* keyboard);
+void Engine_Keyboard_Update(Engine_Keyboard* keyboard);

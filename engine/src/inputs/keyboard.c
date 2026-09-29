@@ -1,19 +1,19 @@
 #include "inputs/keyboard.h"
 
-SKW_Keyboard* SKW_Keyboard_Create()
+Engine_Keyboard* Engine_Keyboard_Create()
 {
-    SKW_Keyboard* keyboard = (SKW_Keyboard*)malloc(sizeof(SKW_Keyboard));
+    Engine_Keyboard* keyboard = (Engine_Keyboard*)malloc(sizeof(Engine_Keyboard));
 
-    keyboard->keys = (SKW_Keyboard_Key*)malloc(sizeof(SKW_Keyboard_Key) * 4);
+    keyboard->keys = (Engine_Keyboard_Key*)malloc(sizeof(Engine_Keyboard_Key) * 4);
 
     return keyboard;
 }
 
-void SKW_Keyboard_Update(SKW_Keyboard* keyboard)
+void Engine_Keyboard_Update(Engine_Keyboard* keyboard)
 {
     const Uint8* sdl_keyboard = SDL_GetKeyboardState(NULL);
 
-    keyboard->keys = (SKW_Keyboard_Key*)malloc(sizeof(SKW_Keyboard_Key) * 4);
+    keyboard->keys = (Engine_Keyboard_Key*)malloc(sizeof(Engine_Keyboard_Key) * 4);
 
-    keyboard->keys[SKW_KEYBOARD_W].is_pressed = sdl_keyboard[SDL_SCANCODE_W];
+    keyboard->keys[ENGINE_KEYBOARD_W].is_pressed = sdl_keyboard[SDL_SCANCODE_W];
 }

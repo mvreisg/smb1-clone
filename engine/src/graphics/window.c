@@ -1,30 +1,31 @@
 #include "graphics/window.h"
 
-SKW_Window* SKW_Window_CreateWindow(char* title, SKW_IntRectangle rectangle, SKW_WindowFlags flags)
+Engine_Window*
+Engine_Window_CreateWindow(char* title, Engine_IntRectangle rectangle, Engine_WindowFlags flags)
 {
-    SKW_Window* context = (SKW_Window*)malloc(sizeof(SKW_Window));
+    Engine_Window* window_context = (Engine_Window*)malloc(sizeof(Engine_Window));
 
-    context->flags = flags;
-    context->rectangle = rectangle;
-    context->title = title;
+    window_context->flags = flags;
+    window_context->rectangle = rectangle;
+    window_context->title = title;
 
     Uint32 sdl_flags = 0;
-    if ((flags & SKW_WINDOW_OPENGL) == SKW_WINDOW_OPENGL)
+    if ((flags & ENGINE_WINDOW_OPENGL) == ENGINE_WINDOW_OPENGL)
     {
         sdl_flags |= SDL_VIDEO_OPENGL;
     }
 
-    context->window = SDL_CreateWindow(title,
-                                       rectangle.point.x,
-                                       rectangle.point.y,
-                                       rectangle.dimension.width,
-                                       rectangle.dimension.height,
-                                       sdl_flags);
+    window_context->window = SDL_CreateWindow(title,
+                                              rectangle.point.x,
+                                              rectangle.point.y,
+                                              rectangle.dimension.width,
+                                              rectangle.dimension.height,
+                                              sdl_flags);
 
-    return context;
+    return window_context;
 }
 
-void SKW_Window_FreeWindow(SKW_Window* window)
+void Engine_Window_FreeWindow(Engine_Window* window)
 {
     SDL_DestroyWindow(window->window);
     free(window);

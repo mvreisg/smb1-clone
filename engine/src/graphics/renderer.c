@@ -1,44 +1,44 @@
 #include "graphics/renderer.h"
 #include "graphics/texture.h"
 
-SKW_Renderer* SKW_Renderer_CreateRenderer(SKW_Window* window,
-                                          SKW_Renderer_InitializationFlags flags)
+Engine_Renderer* Engine_Renderer_CreateRenderer(Engine_Window* window,
+                                                Engine_Renderer_InitializationFlags flags)
 {
     SDL_RendererFlags sdl_flags = 0;
-    if ((flags & SKW_RENDERER_ACCELERATED) == SKW_RENDERER_ACCELERATED)
+    if ((flags & ENGINE_RENDERER_ACCELERATED) == ENGINE_RENDERER_ACCELERATED)
     {
         sdl_flags |= SDL_RENDERER_ACCELERATED;
     }
 
-    SKW_Renderer* renderer = (SKW_Renderer*)malloc(sizeof(SKW_Renderer));
+    Engine_Renderer* renderer = (Engine_Renderer*)malloc(sizeof(Engine_Renderer));
 
     renderer->renderer = SDL_CreateRenderer(window->window, -1, sdl_flags);
 
     return renderer;
 }
 
-void SKW_Renderer_FreeRenderer(SKW_Renderer* renderer)
+void Engine_Renderer_FreeRenderer(Engine_Renderer* renderer)
 {
     SDL_DestroyRenderer(renderer->renderer);
     free(renderer);
     renderer = NULL;
 }
 
-int SKW_Renderer_SetRenderDrawColor(
-    SKW_Renderer* renderer, Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha)
+int Engine_Renderer_SetRenderDrawColor(
+    Engine_Renderer* renderer, Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha)
 {
     return SDL_SetRenderDrawColor(renderer->renderer, red, green, blue, alpha);
 }
 
-int SKW_Renderer_RenderClear(SKW_Renderer* renderer)
+int Engine_Renderer_RenderClear(Engine_Renderer* renderer)
 {
     return SDL_RenderClear(renderer->renderer);
 }
 
-int SKW_Renderer_RenderCopy(SKW_Renderer* renderer,
-                            SKW_Texture* texture,
-                            SKW_IntRectangle* crop_rectangle,
-                            SKW_IntRectangle* actual_rectangle)
+int Engine_Renderer_RenderCopy(Engine_Renderer* renderer,
+                               Engine_Texture* texture,
+                               Engine_IntRectangle* crop_rectangle,
+                               Engine_IntRectangle* actual_rectangle)
 {
     SDL_Rect sdl_crop_rectangle = {
         .x = crop_rectangle->point.x,
@@ -56,7 +56,7 @@ int SKW_Renderer_RenderCopy(SKW_Renderer* renderer,
         renderer->renderer, texture->texture, &sdl_crop_rectangle, &sdl_actual_rectangle);
 }
 
-void SKW_Renderer_RenderPresent(SKW_Renderer* renderer)
+void Engine_Renderer_RenderPresent(Engine_Renderer* renderer)
 {
     SDL_RenderPresent(renderer->renderer);
 }
