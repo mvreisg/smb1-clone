@@ -7,7 +7,7 @@ SDL_LIBS = $(shell pkg-config --libs sdl2 SDL2_image)
 
 LDFLAGS = \
     -L$(ENGINE_LIB) \
-    -lskw \
+    -lengine \
     $(SDL_LIBS) \
     -mconsole \
     -Wl,-subsystem,console \
