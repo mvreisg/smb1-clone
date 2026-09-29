@@ -16,7 +16,7 @@ CFLAGS = \
 SRC := $(shell find $(SRC_DIR) -name '*.c')
 OBJ := $(patsubst $(SRC_DIR)/%.c,$(BUILD)/%.o,$(SRC))
 
-TARGET = $(LIB)/libskw.a
+TARGET = $(LIB)/libengine.a
 
 all: $(TARGET)
 
