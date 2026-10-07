@@ -24,7 +24,7 @@ int Engine_Core_PollEvent(Engine_Core_Events* event, Engine_Core_KeyEvent_KeyCod
 
     if (poll == 0)
     {
-        return 0;
+        return poll;
     }
 
     if (sdl_event.type == SDL_QUIT)
@@ -41,7 +41,7 @@ int Engine_Core_PollEvent(Engine_Core_Events* event, Engine_Core_KeyEvent_KeyCod
         }
     }
 
-    return 1;
+    return poll;
 }
 
 void Engine_Core_Delay(Uint32 milliseconds)

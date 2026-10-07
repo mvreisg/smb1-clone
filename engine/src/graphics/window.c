@@ -1,4 +1,5 @@
 #include "graphics/window.h"
+#include <stdio.h>
 
 Engine_Window*
 Engine_Window_CreateWindow(char* title, Engine_IntRectangle rectangle, Engine_WindowFlags flags)
@@ -12,7 +13,7 @@ Engine_Window_CreateWindow(char* title, Engine_IntRectangle rectangle, Engine_Wi
     Uint32 sdl_flags = 0;
     if ((flags & ENGINE_WINDOW_OPENGL) == ENGINE_WINDOW_OPENGL)
     {
-        sdl_flags |= SDL_VIDEO_OPENGL;
+        sdl_flags |= SDL_WINDOW_OPENGL;
     }
 
     window_context->window = SDL_CreateWindow(title,
@@ -21,6 +22,13 @@ Engine_Window_CreateWindow(char* title, Engine_IntRectangle rectangle, Engine_Wi
                                               rectangle.dimension.width,
                                               rectangle.dimension.height,
                                               sdl_flags);
+
+    if (window_context->window == NULL)
+    {
+        printf("SDL_CreateWindow: %s\n", SDL_GetError());
+        Engine_Window_FreeWindow(window_context);
+        return NULL;
+    }
 
     return window_context;
 }

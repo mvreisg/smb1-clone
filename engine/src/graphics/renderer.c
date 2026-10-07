@@ -1,9 +1,20 @@
 #include "graphics/renderer.h"
 #include "graphics/texture.h"
+#include <stdio.h>
 
 Engine_Renderer* Engine_Renderer_CreateRenderer(Engine_Window* window,
                                                 Engine_Renderer_InitializationFlags flags)
 {
+    if (window == NULL)
+    {
+        return NULL;
+    }
+
+    if (window->window == NULL)
+    {
+        return NULL;
+    }
+
     SDL_RendererFlags sdl_flags = 0;
     if ((flags & ENGINE_RENDERER_ACCELERATED) == ENGINE_RENDERER_ACCELERATED)
     {
@@ -12,7 +23,19 @@ Engine_Renderer* Engine_Renderer_CreateRenderer(Engine_Window* window,
 
     Engine_Renderer* renderer = (Engine_Renderer*)malloc(sizeof(Engine_Renderer));
 
+    if (renderer == NULL)
+    {
+        return NULL;
+    }
+
     renderer->renderer = SDL_CreateRenderer(window->window, -1, sdl_flags);
+
+    if (renderer->renderer == NULL)
+    {
+        printf("SDL_CreateRenderer: %s\n", SDL_GetError());
+        Engine_Renderer_FreeRenderer(renderer);
+        return NULL;
+    }
 
     return renderer;
 }
