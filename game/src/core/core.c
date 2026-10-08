@@ -25,7 +25,7 @@ int Game_Core_Run()
 
     if (window == NULL)
     {
-        printf("Engine error: Failed to create window.\n");
+        printf("Game_Core_Run: Engine_Window_CreateWindow: Failed to create window.\n");
 
         Engine_Core_Quit();
 
@@ -36,7 +36,7 @@ int Game_Core_Run()
 
     if (renderer == NULL)
     {
-        printf("Engine error: Failed to create renderer.\n");
+        printf("Game_Core_Run: Engine_Renderer_CreateRenderer: Failed to create renderer.\n");
 
         Engine_Window_FreeWindow(window);
         Engine_Core_Quit();
@@ -46,8 +46,8 @@ int Game_Core_Run()
 
     while (running)
     {
-        Engine_Core_Events events;
-        Engine_Core_KeyEvent_KeyCode key_code;
+        Engine_Core_Events events = 0;
+        Engine_Core_KeyEvent_KeyCode key_code = 0;
         while (Engine_Core_PollEvent(&events, &key_code))
         {
             if ((events & ENGINE_QUIT) == ENGINE_QUIT)

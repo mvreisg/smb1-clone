@@ -25,7 +25,7 @@ Engine_Window_CreateWindow(char* title, Engine_IntRectangle rectangle, Engine_Wi
 
     if (window_context->window == NULL)
     {
-        printf("SDL_CreateWindow: %s\n", SDL_GetError());
+        printf("Engine_Window_CreateWindow: SDL_CreateWindow: %s\n", SDL_GetError());
         Engine_Window_FreeWindow(window_context);
         return NULL;
     }

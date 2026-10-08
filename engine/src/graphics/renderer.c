@@ -32,7 +32,7 @@ Engine_Renderer* Engine_Renderer_CreateRenderer(Engine_Window* window,
 
     if (renderer->renderer == NULL)
     {
-        printf("SDL_CreateRenderer: %s\n", SDL_GetError());
+        printf("Engine_Renderer_CreateRenderer: SDL_CreateRenderer: %s\n", SDL_GetError());
         Engine_Renderer_FreeRenderer(renderer);
         return NULL;
     }

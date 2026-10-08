@@ -1,4 +1,5 @@
 #include "core/core.h"
+#include <stdio.h>
 
 Engine_Core_InitializationStatus Engine_Core_Initialize(Engine_Core_InitializationFlags flags)
 {
