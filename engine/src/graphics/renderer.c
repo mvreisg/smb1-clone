@@ -1,5 +1,4 @@
 #include "graphics/renderer.h"
-#include "graphics/texture.h"
 #include <stdio.h>
 
 Engine_Renderer* Engine_Renderer_CreateRenderer(Engine_Window* window,
@@ -82,4 +81,21 @@ int Engine_Renderer_RenderCopy(Engine_Renderer* renderer,
 void Engine_Renderer_RenderPresent(Engine_Renderer* renderer)
 {
     SDL_RenderPresent(renderer->renderer);
+}
+
+Engine_Texture* Engine_Renderer_CreateTexture(Engine_Renderer* renderer_context,
+                                              Engine_Image* image)
+{
+    Engine_Texture* texture = (Engine_Texture*)malloc(sizeof(Engine_Texture));
+
+    texture->texture = SDL_CreateTextureFromSurface(renderer_context->renderer, image->surface);
+
+    return texture;
+}
+
+void Engine_Renderer_FreeTexture(Engine_Texture* texture)
+{
+    SDL_DestroyTexture(texture->texture);
+    free(texture);
+    texture = NULL;
 }

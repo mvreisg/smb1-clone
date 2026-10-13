@@ -14,3 +14,7 @@ typedef struct
 } Engine_Image;
 
 Engine_Image_InitializationFlags Engine_Image_Initialize(Engine_Image_InitializationFlags flags);
+
+Engine_Image* Engine_Image_LoadImage(char* path);
+
+void Engine_Image_Free(Engine_Image* image);

@@ -1,4 +1,5 @@
 #include "core/core.h"
+#include "graphics/image.h"
 #include "graphics/renderer.h"
 #include "graphics/window.h"
 #include <stdbool.h>
@@ -44,6 +45,12 @@ int Game_Core_Run()
         return 1;
     }
 
+    Engine_Image_Initialize(ENGINE_IMAGE_INITIALIZE_PNG);
+    Engine_Image* blocks_image = Engine_Image_LoadImage("assets/sprites/blocks.png");
+    Engine_Texture* blocks_texture = Engine_Renderer_CreateTexture(renderer, blocks_image);
+    Engine_IntRectangle blocks_rectangle = {.point = {.x = 0, .y = 0},
+                                            .dimension = {.width = 16, .height = 16}};
+
     while (running)
     {
         Engine_Core_Events events = 0;
@@ -70,12 +77,15 @@ int Game_Core_Run()
             break;
         }
 
-        Engine_Renderer_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         Engine_Renderer_RenderClear(renderer);
+        Engine_Renderer_RenderCopy(renderer, blocks_texture, &blocks_rectangle, &window_rectangle);
         Engine_Renderer_RenderPresent(renderer);
 
         Engine_Core_Delay(FRAME_DELAY);
     }
+
+    Engine_Renderer_FreeTexture(blocks_texture);
+    Engine_Image_Free(blocks_image);
 
     Engine_Renderer_FreeRenderer(renderer);
     Engine_Window_FreeWindow(window);
