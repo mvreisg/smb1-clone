@@ -21,10 +21,15 @@ typedef enum
 
 typedef enum
 {
-    ENGINE_ESCAPE
+    ENGINE_KEYCODE_ESCAPE,
+    ENGINE_KEYCODE_UP,
+    ENGINE_KEYCODE_DOWN,
+    ENGINE_KEYCODE_LEFT,
+    ENGINE_KEYCODE_RIGHT,
 } Engine_Core_KeyEvent_KeyCode;
 
-Engine_Core_InitializationStatus Engine_Core_Initialize(Engine_Core_InitializationFlags flags);
+Engine_Core_InitializationStatus
+Engine_Core_Initialize(Engine_Core_InitializationFlags flags);
 
 int Engine_Core_PollEvent(Engine_Core_Events* event, Engine_Core_KeyEvent_KeyCode* key_code);
 

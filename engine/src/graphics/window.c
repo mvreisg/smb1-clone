@@ -16,12 +16,7 @@ Engine_Window_CreateWindow(char* title, Engine_IntRectangle rectangle, Engine_Wi
         sdl_flags |= SDL_WINDOW_OPENGL;
     }
 
-    window_context->window = SDL_CreateWindow(title,
-                                              rectangle.point.x,
-                                              rectangle.point.y,
-                                              rectangle.dimension.width,
-                                              rectangle.dimension.height,
-                                              sdl_flags);
+    window_context->window = SDL_CreateWindow(title, rectangle.point.x, rectangle.point.y, rectangle.dimension.width, rectangle.dimension.height, sdl_flags);
 
     if (window_context->window == NULL)
     {

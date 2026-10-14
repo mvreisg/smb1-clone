@@ -5,9 +5,9 @@ Engine_Image_InitializationFlags Engine_Image_Initialize(Engine_Image_Initializa
     IMG_InitFlags sdlFlags = 0;
     switch (flags)
     {
-    case ENGINE_IMAGE_INITIALIZE_PNG:
-        sdlFlags |= IMG_INIT_PNG;
-        break;
+        case ENGINE_IMAGE_INITIALIZE_PNG:
+            sdlFlags |= IMG_INIT_PNG;
+            break;
     }
 
     int initializedFlags = IMG_Init(sdlFlags);
