@@ -9,14 +9,14 @@ typedef struct
 {
     Engine_Image* image;
     Engine_Texture* texture;
-} Entity_Block_Rendering_Data;
+} Entity_Rendering_Data;
 
 typedef struct
 {
     Engine_IntRectangle texture_crop_rectangle;
     Engine_IntRectangle scene_rectangle;
     Engine_IntRectangle camera_rectangle;
-} Entity_Block;
+} Entity;
 
 int Game_Core_Run()
 {
@@ -59,20 +59,55 @@ int Game_Core_Run()
 
     Engine_Image_Initialize(ENGINE_IMAGE_INITIALIZE_PNG);
 
-    Entity_Block_Rendering_Data* engine_block_rendering_data = (Entity_Block_Rendering_Data*)malloc(sizeof(Entity_Block_Rendering_Data));
-    engine_block_rendering_data->image = Engine_Image_LoadImage("assets/sprites/blocks.png");
-    engine_block_rendering_data->texture = Engine_Renderer_CreateTexture(renderer, engine_block_rendering_data->image);
+    Uint32 dimension_scale = 2;
+    Engine_IntDimension block_dimension = {.width = 16, .height = 16};
 
-    Entity_Block* blocks = (Entity_Block*)calloc(10, sizeof(Entity_Block));
+    Entity_Rendering_Data* block_entity_rendering_data = (Entity_Rendering_Data*)malloc(sizeof(Entity_Rendering_Data));
+    block_entity_rendering_data->image = Engine_Image_LoadImage("assets/sprites/blocks.png");
+    block_entity_rendering_data->texture = Engine_Renderer_CreateTexture(renderer, block_entity_rendering_data->image);
+
+    Entity_Rendering_Data* mario_entity_rendering_data = (Entity_Rendering_Data*)malloc(sizeof(Entity_Rendering_Data));
+    mario_entity_rendering_data->image = Engine_Image_LoadImage("assets/sprites/mario.png");
+    mario_entity_rendering_data->texture = Engine_Renderer_CreateTexture(renderer, mario_entity_rendering_data->image);
+
+    Entity* blocks = (Entity*)calloc(10, sizeof(Entity));
     for (int i = 0; i < 10; i++)
     {
-        Uint32 width = 16;
-        Uint32 height = 16;
-        Uint32 scale = 2;
-        blocks[i].scene_rectangle = (Engine_IntRectangle){.point = {.x = i * width * scale, .y = 0}, .dimension = {.width = width * scale, .height = height * scale}};
-        blocks[i].texture_crop_rectangle = (Engine_IntRectangle){.point = {.x = 0, .y = 0}, .dimension = {.width = width, .height = height}};
-        blocks[i].camera_rectangle = (Engine_IntRectangle){.point = {.x = 0, .y = 0}, .dimension = {.width = width * scale, .height = height * scale}};
+        blocks[i].scene_rectangle = (Engine_IntRectangle){
+            .point = {
+                .x = i * block_dimension.width * dimension_scale,
+                .y = 0},
+            .dimension = {.width = block_dimension.width * dimension_scale, .height = block_dimension.height * dimension_scale}};
+        blocks[i].texture_crop_rectangle = (Engine_IntRectangle){
+            .point = {
+                .x = 0,
+                .y = 0},
+            .dimension = {.width = block_dimension.width, .height = block_dimension.height}};
+        blocks[i].camera_rectangle = (Engine_IntRectangle){
+            .point = {
+                .x = 0,
+                .y = 0},
+            .dimension = {.width = block_dimension.width * dimension_scale, .height = block_dimension.height * dimension_scale}};
     }
+
+    Engine_IntDimension mario_dimension = {.width = 16, .height = 32};
+
+    Entity* mario = (Entity*)malloc(sizeof(Entity));
+    mario->scene_rectangle = (Engine_IntRectangle){
+        .point = {
+            .x = 0,
+            .y = 0},
+        .dimension = {.width = mario_dimension.width * dimension_scale, .height = mario_dimension.height * dimension_scale}};
+    mario->texture_crop_rectangle = (Engine_IntRectangle){
+        .point = {
+            .x = 0,
+            .y = 0},
+        .dimension = {.width = mario_dimension.width, .height = mario_dimension.height}};
+    mario->camera_rectangle = (Engine_IntRectangle){
+        .point = {
+            .x = 0,
+            .y = 0},
+        .dimension = {.width = mario_dimension.width * dimension_scale, .height = mario_dimension.height * dimension_scale}};
 
     while (running)
     {
@@ -90,16 +125,16 @@ int Game_Core_Run()
                 switch (key_code)
                 {
                     case ENGINE_KEYCODE_UP:
-                        camera_rectangle.point.y -= 1;
+                        mario->scene_rectangle.point.y -= 1;
                         break;
                     case ENGINE_KEYCODE_DOWN:
-                        camera_rectangle.point.y += 1;
+                        mario->scene_rectangle.point.y += 1;
                         break;
                     case ENGINE_KEYCODE_LEFT:
-                        camera_rectangle.point.x -= 1;
+                        mario->scene_rectangle.point.x -= 1;
                         break;
                     case ENGINE_KEYCODE_RIGHT:
-                        camera_rectangle.point.x += 1;
+                        mario->scene_rectangle.point.x += 1;
                         break;
                     case ENGINE_KEYCODE_ESCAPE:
                         running = false;
@@ -115,21 +150,28 @@ int Game_Core_Run()
             break;
         }
 
+        camera_rectangle.point.x = mario->scene_rectangle.point.x - camera_rectangle.dimension.width / 2 + mario->scene_rectangle.dimension.width / 2;
+        camera_rectangle.point.y = mario->scene_rectangle.point.y - camera_rectangle.dimension.height / 2 + mario->scene_rectangle.dimension.height / 2;
+
         Engine_Renderer_RenderClear(renderer);
 
         for (int i = 0; i < 10; i++)
         {
             blocks[i].camera_rectangle.point.x = blocks[i].scene_rectangle.point.x - camera_rectangle.point.x;
             blocks[i].camera_rectangle.point.y = blocks[i].scene_rectangle.point.y - camera_rectangle.point.y;
-            Engine_Renderer_RenderCopy(renderer, engine_block_rendering_data->texture, &blocks[i].texture_crop_rectangle, &blocks[i].camera_rectangle);
+            Engine_Renderer_RenderCopy(renderer, block_entity_rendering_data->texture, &blocks[i].texture_crop_rectangle, &blocks[i].camera_rectangle);
         }
+
+        mario->camera_rectangle.point.x = mario->scene_rectangle.point.x - camera_rectangle.point.x;
+        mario->camera_rectangle.point.y = mario->scene_rectangle.point.y - camera_rectangle.point.y;
+        Engine_Renderer_RenderCopy(renderer, mario_entity_rendering_data->texture, &mario->texture_crop_rectangle, &mario->camera_rectangle);
 
         Engine_Renderer_RenderPresent(renderer);
         Engine_Core_Delay(FRAME_DELAY);
     }
 
-    Engine_Renderer_FreeTexture(engine_block_rendering_data->texture);
-    Engine_Image_Free(engine_block_rendering_data->image);
+    Engine_Renderer_FreeTexture(block_entity_rendering_data->texture);
+    Engine_Image_Free(block_entity_rendering_data->image);
 
     free(blocks);
     blocks = NULL;
