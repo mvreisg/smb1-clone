@@ -1,22 +1,10 @@
 #include "core/core.h"
+#include "entities/entity.h"
+#include "game/include/graphics/renderer.h"
 #include "graphics/image.h"
-#include "graphics/renderer.h"
 #include "graphics/window.h"
 #include <stdbool.h>
-#include <stdio.h>
-
-typedef struct
-{
-    Engine_Image* image;
-    Engine_Texture* texture;
-} Entity_Rendering_Data;
-
-typedef struct
-{
-    Engine_IntRectangle texture_crop_rectangle;
-    Engine_IntRectangle scene_rectangle;
-    Engine_IntRectangle camera_rectangle;
-} Entity;
+#include <stdlib.h>
 
 int Game_Core_Run()
 {
@@ -35,40 +23,15 @@ int Game_Core_Run()
     Engine_IntRectangle window_rectangle = {.point = {.x = 100, .y = 100}, .dimension = {.width = 1280, .height = 720}};
     Engine_IntRectangle camera_rectangle = {.point = {.x = 0, .y = 0}, .dimension = {.width = 1280, .height = 720}};
     Engine_Window* window = Engine_Window_CreateWindow("smb1-clone", window_rectangle, 0);
-
-    if (window == NULL)
-    {
-        printf("Game_Core_Run: Engine_Window_CreateWindow: Failed to create window.\n");
-
-        Engine_Core_Quit();
-
-        return 1;
-    }
-
     Engine_Renderer* renderer = Engine_Renderer_CreateRenderer(window, ENGINE_RENDERER_ACCELERATED);
-
-    if (renderer == NULL)
-    {
-        printf("Game_Core_Run: Engine_Renderer_CreateRenderer: Failed to create renderer.\n");
-
-        Engine_Window_FreeWindow(window);
-        Engine_Core_Quit();
-
-        return 1;
-    }
 
     Engine_Image_Initialize(ENGINE_IMAGE_INITIALIZE_PNG);
 
     Uint32 dimension_scale = 2;
     Engine_IntDimension block_dimension = {.width = 16, .height = 16};
 
-    Entity_Rendering_Data* block_entity_rendering_data = (Entity_Rendering_Data*)malloc(sizeof(Entity_Rendering_Data));
-    block_entity_rendering_data->image = Engine_Image_LoadImage("assets/sprites/blocks.png");
-    block_entity_rendering_data->texture = Engine_Renderer_CreateTexture(renderer, block_entity_rendering_data->image);
-
-    Entity_Rendering_Data* mario_entity_rendering_data = (Entity_Rendering_Data*)malloc(sizeof(Entity_Rendering_Data));
-    mario_entity_rendering_data->image = Engine_Image_LoadImage("assets/sprites/mario.png");
-    mario_entity_rendering_data->texture = Engine_Renderer_CreateTexture(renderer, mario_entity_rendering_data->image);
+    Game_Rendering_Data* block_rendering_data = Game_Renderer_CreateRenderingData(renderer, "assets/sprites/blocks.png");
+    Game_Rendering_Data* mario_rendering_data = Game_Renderer_CreateRenderingData(renderer, "assets/sprites/mario.png");
 
     Entity* blocks = (Entity*)calloc(10, sizeof(Entity));
     for (int i = 0; i < 10; i++)
@@ -159,19 +122,22 @@ int Game_Core_Run()
         {
             blocks[i].camera_rectangle.point.x = blocks[i].scene_rectangle.point.x - camera_rectangle.point.x;
             blocks[i].camera_rectangle.point.y = blocks[i].scene_rectangle.point.y - camera_rectangle.point.y;
-            Engine_Renderer_RenderCopy(renderer, block_entity_rendering_data->texture, &blocks[i].texture_crop_rectangle, &blocks[i].camera_rectangle);
+            Engine_Renderer_RenderCopy(renderer, block_rendering_data->texture, &blocks[i].texture_crop_rectangle, &blocks[i].camera_rectangle);
         }
 
         mario->camera_rectangle.point.x = mario->scene_rectangle.point.x - camera_rectangle.point.x;
         mario->camera_rectangle.point.y = mario->scene_rectangle.point.y - camera_rectangle.point.y;
-        Engine_Renderer_RenderCopy(renderer, mario_entity_rendering_data->texture, &mario->texture_crop_rectangle, &mario->camera_rectangle);
+        Engine_Renderer_RenderCopy(renderer, mario_rendering_data->texture, &mario->texture_crop_rectangle, &mario->camera_rectangle);
 
         Engine_Renderer_RenderPresent(renderer);
         Engine_Core_Delay(FRAME_DELAY);
     }
 
-    Engine_Renderer_FreeTexture(block_entity_rendering_data->texture);
-    Engine_Image_Free(block_entity_rendering_data->image);
+    Engine_Renderer_FreeTexture(block_rendering_data->texture);
+    Engine_Image_Free(block_rendering_data->image);
+
+    Engine_Renderer_FreeTexture(mario_rendering_data->texture);
+    Engine_Image_Free(mario_rendering_data->image);
 
     free(blocks);
     blocks = NULL;

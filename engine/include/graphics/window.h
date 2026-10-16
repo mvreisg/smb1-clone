@@ -27,7 +27,6 @@ typedef struct
     char* title;
 } Engine_Window;
 
-Engine_Window*
-Engine_Window_CreateWindow(char* title, Engine_IntRectangle rectangle, Engine_WindowFlags flags);
+Engine_Window* Engine_Window_CreateWindow(char* title, Engine_IntRectangle rectangle, Engine_WindowFlags flags);
 
 void Engine_Window_FreeWindow(Engine_Window* window);

@@ -21,6 +21,7 @@ CFLAGS = \
     -Wextra \
     -std=c11 \
     -I$(ENGINE_INC) \
+	-Iinclude \
     -Isrc \
     -I..
 
