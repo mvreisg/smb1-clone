@@ -1,4 +1,4 @@
-#include "graphics/image.h"
+#include "engine/include/graphics/image.h"
 
 Engine_Image_InitializationFlags Engine_Image_Initialize(Engine_Image_InitializationFlags flags)
 {

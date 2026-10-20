@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/geometry.h"
+#include "engine/include/math/geometry.h"
 #include <SDL2/SDL.h>
 
 typedef enum
