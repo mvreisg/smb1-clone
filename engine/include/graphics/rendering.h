@@ -1,14 +1,24 @@
 #pragma once
 
-#include "engine/include/graphics/image.h"
-#include "engine/include/graphics/window.h"
-#include "engine/include/math/geometry.h"
+#include "graphics/window.h"
+#include "math/geometry.h"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 typedef enum
 {
-    ENGINE_RENDERER_ACCELERATED = 1
-} Engine_Renderer_InitializationFlags;
+    ENGINE_IMAGE_INITIALIZE_PNG
+} Engine_ImageInitializationFlags;
+
+typedef struct
+{
+    SDL_Surface* surface;
+} Engine_Image;
+
+typedef enum
+{
+    ENGINE_RENDERER_INITIALIZE_ACCELERATED
+} Engine_RendererInitializationFlags;
 
 typedef struct
 {
@@ -22,8 +32,8 @@ typedef struct
 
 typedef struct
 {
-    char* name;
-    Engine_FloatRectangle rectangle
+    char name[50];
+    Engine_IntRectangle rectangle;
 } Engine_Sprite;
 
 typedef struct
@@ -32,26 +42,30 @@ typedef struct
     Engine_Texture* texture;
 } Engine_Rendering_Data;
 
-typedef struct
-{
-    Engine_Rendering_Data* rendering_data;
-    Engine_Sprite* sprites;
-} Engine_Spritesheet;
+Engine_ImageInitializationFlags Engine_InitializeImages(Engine_ImageInitializationFlags flags);
 
-Engine_Renderer* Engine_Rendering_CreateRenderer(Engine_Window* window_context, Engine_Renderer_InitializationFlags flags);
+Engine_Image* Engine_LoadImage(char* path);
 
-void Engine_Rendering_FreeRenderer(Engine_Renderer* renderer);
+void Engine_FreeImage(Engine_Image* image);
 
-int Engine_Rendering_SetRendererDrawColor(Engine_Renderer* renderer, Uint8 red, Uint8 green, Uint8 blue, Uint8 alpha);
+Engine_Renderer* Engine_CreateRenderer(Engine_Window* window_context, Engine_RendererInitializationFlags flags);
 
-int Engine_Rendering_RendererClear(Engine_Renderer* renderer);
+void Engine_FreeRenderer(Engine_Renderer* renderer);
 
-int Engine_Rendering_RendererCopy(Engine_Renderer* renderer, Engine_Texture* texture, Engine_IntRectangle* crop_rectangle, Engine_IntRectangle* actual_rectangle);
+int Engine_ClearRenderer(Engine_Renderer* renderer);
 
-void Engine_Rendering_RendererPresent(Engine_Renderer* renderer);
+int Engine_CopyTextureToRenderer(Engine_Renderer* renderer, Engine_Texture* texture, Engine_IntRectangle* crop_rectangle, Engine_IntRectangle* actual_rectangle);
 
-Engine_Texture* Engine_Rendering_CreateTexture(Engine_Renderer* renderer_context, Engine_Image* image);
+void Engine_PresentRenderer(Engine_Renderer* renderer);
 
-void Engine_Rendering_FreeTexture(Engine_Texture* texture);
+Engine_Texture* Engine_CreateTexture(Engine_Renderer* renderer_context, Engine_Image* image);
 
-Engine_Rendering_Data* Engine_Rendering_CreateRenderingData(Engine_Renderer* renderer, char* image_path, Engine_IntDimension dimensions);
+void Engine_FreeTexture(Engine_Texture* texture);
+
+Engine_Rendering_Data* Engine_CreateRenderingData(Engine_Renderer* renderer, char* image_path);
+
+void Engine_FreeRenderingData(Engine_Rendering_Data* renderer);
+
+Engine_Sprite* Engine_CreateSprite(char* name, Engine_IntRectangle rectangle);
+
+void Engine_FreeSprite(Engine_Sprite* sprite);

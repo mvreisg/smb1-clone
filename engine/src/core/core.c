@@ -1,4 +1,4 @@
-#include "engine/include/core/core.h"
+#include "core/core.h"
 
 Engine_Core_InitializationStatus Engine_Core_Initialize(Engine_Core_InitializationFlags flags)
 {

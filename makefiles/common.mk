@@ -17,13 +17,14 @@ APP_OBJ := $(patsubst ../src/%.c,$(BUILD_DIR)/app/%.o,$(APP_SRC))
 OBJ := $(GAME_OBJ) $(APP_OBJ)
 
 CFLAGS = \
-    -Wall \
-    -Wextra \
-    -std=c11 \
-    -I$(ENGINE_INC) \
+	-Wall \
+	-Wextra \
+	-std=c11 \
+	-g \
+	-I$(ENGINE_INC) \
 	-Iinclude \
-    -Isrc \
-    -I..
+	-Isrc \
+	-I..
 
 all: $(TARGET)
 

@@ -1,7 +1,9 @@
-#include "engine/include/core/core.h"
-#include "engine/include/graphics/image.h"
-#include "engine/include/graphics/window.h"
-#include "game/include/entities/entities.h"
+#include "core/core.h"
+#include "entities/entities.h"
+#include "graphics/image.h"
+#include "graphics/rendering.h"
+#include "graphics/window.h"
+#include "inputs/keyboard.h"
 #include <stdbool.h>
 
 int Game_Core_Run()
@@ -21,14 +23,14 @@ int Game_Core_Run()
     Engine_IntRectangle window_rectangle = {.point = {.x = 100, .y = 100}, .dimension = {.width = 1280, .height = 720}};
     Engine_IntRectangle camera_rectangle = {.point = {.x = 0, .y = 0}, .dimension = {.width = 1280, .height = 720}};
     Engine_Window* window = Engine_Window_CreateWindow("smb1-clone", window_rectangle, 0);
-    Engine_Renderer* renderer = Engine_Rendering_CreateRendering(window, ENGINE_RENDERER_ACCELERATED);
+    Engine_Renderer* renderer = Engine_Rendering_CreateRenderer(window, ENGINE_RENDERER_ACCELERATED);
+    Engine_Keyboard* keyboard = Engine_Keyboard_Create();
 
     Engine_Image_Initialize(ENGINE_IMAGE_INITIALIZE_PNG);
 
     Engine_Rendering_Data* mario_rendering_data = Engine_Rendering_CreateRenderingData(
         renderer,
-        "assets/sprites/mario.png",
-        (Engine_IntDimension){.width = 16, .height = 32});
+        "assets/sprites/mario.png");
 
     Engine_FloatDimension mario_dimension = {.width = 16, .height = 32};
     Engine_FloatDimension mario_scale = {.width = 1, .height = 1};
@@ -39,6 +41,8 @@ int Game_Core_Run()
                                                     .y = 0},
                                                 .dimension = mario_dimension},
                                             (Engine_FloatRectangle){.point = {.x = 0, .y = 0}, .dimension = mario_scale});
+
+    Engine_Sprite* mario_idle_sprite = Engine_Rendering_CreateSprite("mario_idle_sprite", (Engine_IntRectangle){.point = {.x = 0, .y = 0}, .dimension = {.width = mario_dimension.width, .height = mario_dimension.height}});
 
     while (running)
     {
@@ -56,16 +60,12 @@ int Game_Core_Run()
                 switch (key_code)
                 {
                     case ENGINE_KEYCODE_UP:
-                        mario->scene_rectangle.point.y -= 1;
                         break;
                     case ENGINE_KEYCODE_DOWN:
-                        mario->scene_rectangle.point.y += 1;
                         break;
                     case ENGINE_KEYCODE_LEFT:
-                        mario->scene_rectangle.point.x -= 1;
                         break;
                     case ENGINE_KEYCODE_RIGHT:
-                        mario->scene_rectangle.point.x += 1;
                         break;
                     case ENGINE_KEYCODE_ESCAPE:
                         running = false;
@@ -81,23 +81,36 @@ int Game_Core_Run()
             break;
         }
 
+        Engine_Keyboard_Update(keyboard);
+
         camera_rectangle.point.x = mario->scene_rectangle.point.x - camera_rectangle.dimension.width / 2 + mario->scene_rectangle.dimension.width / 2;
         camera_rectangle.point.y = mario->scene_rectangle.point.y - camera_rectangle.dimension.height / 2 + mario->scene_rectangle.dimension.height / 2;
 
-        Engine_Rendering_RenderClear(renderer);
+        Engine_Rendering_RendererClear(renderer);
 
-        Engine_Rendering_RenderCopy(renderer, mario_rendering_data->texture, &mario->texture_crop_rectangle, &mario->camera_rectangle);
+        Engine_Rendering_RendererCopy(
+            renderer,
+            mario_rendering_data->texture,
+            &mario_idle_sprite->rectangle,
+            &(Engine_IntRectangle){
+                .point = {
+                    .x = mario->scene_rectangle.point.x,
+                    .y = mario->scene_rectangle.point.y},
+                .dimension = {.width = mario->scene_rectangle.dimension.width, .height = mario->scene_rectangle.dimension.height}});
 
-        Engine_Rendering_RenderPresent(renderer);
+        Engine_Rendering_RendererPresent(renderer);
         Engine_Core_Delay(FRAME_DELAY);
     }
 
+    Engine_Keyboard_Free(keyboard);
+
     Game_Entity_Free(mario);
 
-    Engine_Rendering_FreeTexture(mario_rendering_data->texture);
+    Engine_Rendering_FreeRenderingData(mario_rendering_data);
+
     Engine_Image_Free(mario_rendering_data->image);
 
-    Engine_Rendering_FreeRendering(renderer);
+    Engine_Rendering_FreeRenderer(renderer);
     Engine_Window_FreeWindow(window);
     Engine_Core_Quit();
 
