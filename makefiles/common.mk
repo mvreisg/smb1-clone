@@ -1,47 +1,39 @@
+.DEFAULT_GOAL := all
+
 CC = gcc
 
-SRC_DIR = src
-BUILD_DIR = build
-BIN_DIR = ../bin
+SRC_DIR := src
+BUILD_DIR := build
+BIN_DIR := bin
 
-ENGINE_DIR = ../engine
-ENGINE_INC = $(ENGINE_DIR)/include
-ENGINE_LIB = $(ENGINE_DIR)/lib
-
-GAME_SRC := $(shell find $(SRC_DIR) -name '*.c')
-APP_SRC := $(shell find ../src -name '*.c')
+GAME_SRC := $(shell find $(SRC_DIR) -type f -name '*.c')
 
 GAME_OBJ := $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(GAME_SRC))
-APP_OBJ := $(patsubst ../src/%.c,$(BUILD_DIR)/app/%.o,$(APP_SRC))
+DEP := $(GAME_OBJ:.o=.d)
 
-OBJ := $(GAME_OBJ) $(APP_OBJ)
+CPPFLAGS += -Iinclude -Isrc $(SDL_CFLAGS)
+CFLAGS += -Wall -Wextra -std=c11 -g
 
-CFLAGS = \
-	-Wall \
-	-Wextra \
-	-std=c11 \
-	-g \
-	-I$(ENGINE_INC) \
-	-Iinclude \
-	-Isrc \
-	-I..
+.PHONY: all build clean rebuild
 
 all: $(TARGET)
 
-$(TARGET): $(OBJ)
-	@mkdir -p $(BIN_DIR)
-	$(CC) $^ -o $@ $(LDFLAGS)
+build: all
+
+$(TARGET): $(GAME_OBJ)
+	$(MKDIR_P) $(BIN_DIR)
+	$(CC) $(GAME_OBJ) -o $@ $(LDFLAGS)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(SDL_CFLAGS) -c $< -o $@
-
-$(BUILD_DIR)/app/%.o: ../src/%.c
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(SDL_CFLAGS) -c $< -o $@
+	$(MKDIR_P) $(dir $@)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
 
 clean:
-	rm -rf $(BUILD_DIR)
-	rm -f $(TARGET)
+	$(RM_RF) $(BUILD_DIR)
+	$(RM_RF) $(BIN_DIR)
 
-.PHONY: all clean
+rebuild:
+	$(MAKE) clean
+	$(MAKE) all
+
+-include $(DEP)

@@ -1,14 +1,13 @@
-TARGET = $(BIN_DIR)/smb1-clone.exe
+TARGET := bin/smb1-clone.exe
 
-include ../makefiles/common.mk
+MKDIR_P = mkdir -p
+RM_RF = rm -rf
 
-SDL_CFLAGS = $(shell pkg-config --cflags sdl2 SDL2_image)
-SDL_LIBS = $(shell pkg-config --libs sdl2 SDL2_image)
+SDL_CFLAGS := $(shell pkg-config --cflags sdl2 SDL2_image)
+SDL_LIBS := $(shell pkg-config --libs sdl2 SDL2_image)
 
 LDFLAGS = \
-    -L$(ENGINE_LIB) \
-    -lengine \
     $(SDL_LIBS) \
-    -mconsole \
-    -Wl,-subsystem,console \
-    -Wl,-e,mainCRTStartup
+    -mconsole
+
+include makefiles/common.mk
