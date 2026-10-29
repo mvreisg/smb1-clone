@@ -1,6 +1,5 @@
 #include "stage/stage.h"
-#include "camera/camera.h"
-#include "entities/entities.h"
+#include "entity/entity.h"
 #include <stdlib.h>
 
 const SDL_Rect WORLD_SCALE = {.x = 1, .y = 1, .w = 2, .h = 2};
@@ -28,44 +27,61 @@ Stage* Stage_Create()
     return stage;
 }
 
-void Stage_Tick(Stage* stage, Camera* camera)
+void Stage_Tick(Stage* stage, Camera* camera, const Uint8* keystate)
 {
+    if (keystate[SDL_SCANCODE_W])
+    {
+        stage->mario->rect.y -= 5;
+    }
+    else if (keystate[SDL_SCANCODE_S])
+    {
+        stage->mario->rect.y += 5;
+    }
+    else if (keystate[SDL_SCANCODE_A])
+    {
+        stage->mario->rect.x -= 5;
+    }
+    else if (keystate[SDL_SCANCODE_D])
+    {
+        stage->mario->rect.x += 5;
+    }
+
     camera->rect.x = stage->mario->rect.x - camera->rect.w / 2 + stage->mario->rect.w / 2;
     camera->rect.y = stage->mario->rect.y - camera->rect.h / 2 + stage->mario->rect.h / 2;
 }
 
-void Stage_Render(Stage* stage, Camera* camera)
+void Stage_Render(Stage* stage, Camera* camera, SDL_Renderer* renderer, Textures* textures)
 {
     for (int i = 0; i < 10; i++)
     {
         SDL_RenderCopy(
             renderer,
-            block_texture,
+            textures->blocks_texture,
             &(SDL_Rect){
                 .x = 0,
                 .y = 0,
                 .w = 16,
                 .h = 16},
             &(SDL_Rect){
-                .x = blocks[i].rect.x - camera_rect.x,
-                .y = blocks[i].rect.y - camera_rect.y,
-                .w = blocks[i].rect.w,
-                .h = blocks[i].rect.h});
+                .x = stage->blocks[i].rect.x - camera->rect.x,
+                .y = stage->blocks[i].rect.y - camera->rect.y,
+                .w = stage->blocks[i].rect.w,
+                .h = stage->blocks[i].rect.h});
     }
 
     SDL_RenderCopy(
         renderer,
-        mario_texture,
+        textures->mario_texture,
         &(SDL_Rect){
             .x = 0,
             .y = 0,
             .w = 16,
             .h = 32},
         &(SDL_Rect){
-            .x = mario->rect.x - camera_rect.x,
-            .y = mario->rect.y - camera_rect.y,
-            .w = mario->rect.w,
-            .h = mario->rect.h});
+            .x = stage->mario->rect.x - camera->rect.x,
+            .y = stage->mario->rect.y - camera->rect.y,
+            .w = stage->mario->rect.w,
+            .h = stage->mario->rect.h});
 }
 
 void Stage_Free(Stage* stage)

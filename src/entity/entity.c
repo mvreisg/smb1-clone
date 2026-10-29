@@ -1,4 +1,4 @@
-#include "entities/entities.h"
+#include "entity/entity.h"
 #include <stdlib.h>
 
 Entity* Entity_Create(Uint32 amount)

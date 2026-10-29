@@ -1,5 +1,4 @@
 #pragma once
-#include "stage/stage.h"
 #include <SDL.h>
 
 typedef struct

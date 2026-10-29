@@ -1,9 +1,7 @@
 #include "core/core.h"
 #include "camera/camera.h"
-#include "entities/entities.h"
 #include "stage/stage.h"
 #include <SDL.h>
-#include <SDL_image.h>
 #include <stdbool.h>
 
 int Core_Run()
@@ -16,22 +14,19 @@ int Core_Run()
     const float FRAME_DELAY_DIFF = FRAME_DELAY_FLOAT - FRAME_DELAY_INT;
     float accumulated_frame_delay;
 
-    int init_status = SDL_Init(SDL_INIT_VIDEO);
-    if (init_status)
-    {
-        SDL_Quit();
-        return 1;
-    }
-
     SDL_Rect window_rect = {.x = 100, .y = 100, .w = 1280, .h = 720};
 
     SDL_Window* window = SDL_CreateWindow("smb1-clone", window_rect.x, window_rect.y, window_rect.w, window_rect.h, SDL_WINDOW_VULKAN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-    IMG_Init(IMG_INIT_PNG);
+    int img_init_status = Image_Init();
+    if (img_init_status)
+    {
+        SDL_Quit();
+        return 1;
+    }
 
-    SDL_Texture* mario_texture = IMG_LoadTexture(renderer, "assets/sprites/mario.png");
-    SDL_Texture* block_texture = IMG_LoadTexture(renderer, "assets/sprites/blocks.png");
+    Textures* textures = Image_Create(renderer);
 
     Camera* camera = Camera_Create((SDL_FRect){.x = 0, .y = 0, .w = 1280, .h = 720});
     Stage* stage = Stage_Create();
@@ -50,16 +45,12 @@ int Core_Run()
                     switch (event.key.keysym.sym)
                     {
                         case SDLK_UP:
-                            mario->rect.y -= 1;
                             break;
                         case SDLK_DOWN:
-                            mario->rect.y += 1;
                             break;
                         case SDLK_LEFT:
-                            mario->rect.x -= 1;
                             break;
                         case SDLK_RIGHT:
-                            mario->rect.x += 1;
                             break;
                         case SDLK_ESCAPE:
                             running = false;
@@ -76,9 +67,13 @@ int Core_Run()
             break;
         }
 
+        const Uint8* keystate = SDL_GetKeyboardState(NULL);
+
+        Stage_Tick(stage, camera, keystate);
+
         SDL_RenderClear(renderer);
 
-        Stage_Render();
+        Stage_Render(stage, camera, renderer, textures);
 
         SDL_RenderPresent(renderer);
 
@@ -91,8 +86,10 @@ int Core_Run()
         }
     }
 
-    SDL_DestroyTexture(block_texture);
-    SDL_DestroyTexture(mario_texture);
+    Camera_Free(camera);
+    Stage_Free(stage);
+    Image_Free(textures);
+
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 
