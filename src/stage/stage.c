@@ -6,7 +6,7 @@ const SDL_Rect WORLD_SCALE = {.x = 1, .y = 1, .w = 2, .h = 2};
 
 Stage* Stage_Create()
 {
-    Stage* stage = (Stage*)malloc(sizeof(Stage));
+    Stage* stage = malloc(sizeof(Stage));
     stage->mario = Entity_Create(1);
     stage->mario->rect = (SDL_FRect){
         .x = 0,

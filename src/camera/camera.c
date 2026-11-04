@@ -4,7 +4,7 @@
 
 Camera* Camera_Create(SDL_FRect rect)
 {
-    Camera* camera = (Camera*)malloc(sizeof(Camera));
+    Camera* camera = malloc(sizeof(Camera));
     camera->rect = rect;
 
     return camera;

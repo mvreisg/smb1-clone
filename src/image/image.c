@@ -12,7 +12,7 @@ Textures* Image_Create(SDL_Renderer* renderer)
     SDL_Texture* mario_texture = IMG_LoadTexture(renderer, "assets/sprites/mario.png");
     SDL_Texture* blocks_texture = IMG_LoadTexture(renderer, "assets/sprites/blocks.png");
 
-    Textures* textures = (Textures*)malloc(sizeof(Textures));
+    Textures* textures = malloc(sizeof(Textures));
 
     textures->mario_texture = mario_texture;
     textures->blocks_texture = blocks_texture;
