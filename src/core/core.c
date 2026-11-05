@@ -67,9 +67,9 @@ int Core_Run()
             break;
         }
 
-        const Uint8* keystate = SDL_GetKeyboardState(NULL);
+        const Uint8* keyboard_state = SDL_GetKeyboardState(NULL);
 
-        Stage_Tick(stage, camera, keystate);
+        Stage_Tick(stage, camera, keyboard_state);
 
         SDL_RenderClear(renderer);
 
